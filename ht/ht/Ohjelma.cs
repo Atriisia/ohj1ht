@@ -17,7 +17,7 @@ namespace Program
         [STAThread]
         static void Main()
         {
-            using (var game = new ht())
+            using (var game = new NinjaOfJapan())
                 game.Run();
         }
     }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Jypeli;
 using Jypeli.Assets;
-using Jypeli.Controls;
 using Jypeli.Widgets;
 
 /// @author Aleksanteri Strömberg
@@ -10,15 +7,15 @@ using Jypeli.Widgets;
 /// <summary>
 /// Ohjelmointi 1 kurssin harjoitustyö, Ninja of Japan
 /// </summary>
-public class ht : PhysicsGame
+/// TODO funktio: https://tim.jyu.fi/answers/kurssit/tie/ohj1/2020s/demot/demo7?answerNumber=3&task=pisteidenlahin&user=stroakxv
+public class NinjaOfJapan : PhysicsGame
 {
     private PlatformCharacter pelaaja;
     private Cannon ase;
-    EasyHighScore topTen = new EasyHighScore();
+    private EasyHighScore topTen = new EasyHighScore();
     private Timer restartDelay;
-    private Timer mainMenuDelay;
-    IntMeter pisteLaskuri;
-    IntMeter elamaLaskuri;
+    private IntMeter pisteLaskuri;
+    private IntMeter elamaLaskuri;
     private Image pelaajanKuva = LoadImage("pelaaja.png");
     private Image kruunuKuva = LoadImage("kruunu.png");
     private Image tahtiKuva = LoadImage("tahti.png");
@@ -26,8 +23,6 @@ public class ht : PhysicsGame
     private Image vihuKuva = LoadImage("vihu.png");
     private Image heittoTahtiKuva = LoadImage("heittotahti.png");
     private Timer ajastin = new Timer();
-    private const double nopeus = 100;
-    private const double hyppynopeus = 600;
     private double valiAika = 0;
     private int keratytPisteet = 0;
     private int elamienLkm = 3;
@@ -35,12 +30,15 @@ public class ht : PhysicsGame
     private int nykyinenKentta = 0;
     private string[] kentat = new string[] { "kentta.txt", "kentta2.txt", "kentta3.txt" };
 
+
     public override void Begin()
     {
         //SetWindowSize(1920, 1080, true);
         SetWindowSize(1024, 768, false);
         MainMenu();
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa on luotu ja määritelty pelin päävalikko.
     /// </summary>
@@ -53,6 +51,8 @@ public class ht : PhysicsGame
         MainMenu.AddItemHandler(2, ConfirmExit);
         Add(MainMenu);
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa päävalikossa painamalla nappia "TOP 10" saa näkyville TOP 10 listauksen.
     /// </summary>
@@ -61,6 +61,7 @@ public class ht : PhysicsGame
         topTen.Show();
         topTen.HighScoreWindow.Closed += delegate { MainMenu(); };
     }
+
 
     /// <summary>
     /// Aliohjelma, jossa on toteutettu TOP 10 listaus, kertoimet tietylle ajalle, algoritmi miten pisteet määyräytyvät. Algoritmissa otetaan huomioon pelaajan aika, sille tietty kerroin sekä kerätyt pisteet.
@@ -90,6 +91,7 @@ public class ht : PhysicsGame
         topTen.HighScoreWindow.Closed += delegate { MainMenu(); };
     }
 
+
     /// <summary>
     /// Aliohjelma, jossa luodaan peliin ajastin, jota vastaan taistellaan.
     /// </summary>
@@ -105,6 +107,7 @@ public class ht : PhysicsGame
         ajastinNaytto.BindTo(ajastin.SecondCounter);
         Add(ajastinNaytto);
     }
+
 
     /// <summary>
     /// Aliohjelma, joka laskee pelaajan pisteet pelin edetessä
@@ -122,6 +125,8 @@ public class ht : PhysicsGame
         hud.BindTo(pisteLaskuri);
         Add(hud);
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa pelin aikana näkyy pelaajien elämien lukumäärä.
     /// </summary>
@@ -139,6 +144,8 @@ public class ht : PhysicsGame
         Add(elamaHud);
 
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa luodaan aina läpäistyn kentän jälkeen seuraava kenttä. Asetetaan nykyinen kentta yhtä suuremmaksi ja kutsutaan aliohjelmaa lataaKenttaUudelleen.
     /// </summary>
@@ -147,6 +154,8 @@ public class ht : PhysicsGame
         nykyinenKentta = nykyinenKentta + 1;
         LataaKenttaUudelleen();
     }
+
+
     /// <summary>
     /// Aliohjelma, joka luo kentän tietyllä rakenteella kullakin kierroksella, parametrin kentta avulla.
     /// </summary>
@@ -166,6 +175,7 @@ public class ht : PhysicsGame
         Level.Background.CreateGradient(Color.Orange, Color.Red);
     }
 
+
     /// <summary>
     /// Aliohjelma, joka luo uuden pelin kun olet kuollut 3. kertaa, läpäissyt kaikki tasot tai aloitat pelaamaan ensimmäistä kertaa. 
     /// </summary>
@@ -182,6 +192,7 @@ public class ht : PhysicsGame
         pisteLaskuri.Reset();
     }
 
+
     /// <summary>
     /// Aliohjelma joka luo aseen pelaajalle.
     /// </summary>
@@ -195,6 +206,8 @@ public class ht : PhysicsGame
         pelaaja.Add(ase);
         ase.IsVisible = false;
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa luodaan pelaajan ase heittotähdeksi, sekä asetetaan pelaaja heittämään heittotähtiä.
     /// </summary>
@@ -207,6 +220,8 @@ public class ht : PhysicsGame
             heittoTahti.Image = heittoTahtiKuva;
         }
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa ladataan kenttä uudelleen jos jokin tietyistä ehdoista toteutuu. Esimerkiksi kuollessa tai esteeseen törmätessä.
     /// </summary>
@@ -218,8 +233,8 @@ public class ht : PhysicsGame
         {
             restartDelay.Stop();
         }
-
-        if (nykyinenKentta == 3)
+        int viimeinenKenttaNro = 3;
+        if (nykyinenKentta == viimeinenKenttaNro)
         {
             ajastin.Stop();
             valiAika = ajastin.CurrentTime;
@@ -241,6 +256,8 @@ public class ht : PhysicsGame
             Gravity = new Vector(0, -1500);
         }
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa luodaan pelaaja peliin. Joka on tässä tapauksessa musta ninja.
     /// </summary>
@@ -259,6 +276,8 @@ public class ht : PhysicsGame
         ElamienMaara();
         Add(pelaaja);
     }
+
+
     /// <summary>
     /// Aliohjelma jossa pelaaja kerää tähden.
     /// </summary>
@@ -270,6 +289,7 @@ public class ht : PhysicsGame
         tahtienLkmKentassa--;
         pisteLaskuri.Value += 50;
     }
+
 
     /// <summary>
     /// Aliohjelma, jossa pelaaja voi kerätä kruunun ja siirtyä seuraavaan kenttään vasta kun kaikki tähdet ovat kerätty.
@@ -285,6 +305,8 @@ public class ht : PhysicsGame
             SeuraavaKentta();
         }
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa pelaaja törmää esteeseen ja sen seuraukset.
     /// </summary>
@@ -299,7 +321,7 @@ public class ht : PhysicsGame
             elamaLaskuri.Value -= 1;
             ClearAll();
             MessageDisplay.Add("Hävisit pelin!");
-            mainMenuDelay = Timer.CreateAndStart(3, MainMenu);
+            Timer.CreateAndStart(3, MainMenu);
         }
         else
         {
@@ -309,6 +331,8 @@ public class ht : PhysicsGame
             restartDelay = Timer.CreateAndStart(1, LataaKenttaUudelleen);
         }
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa luodaan peliin vihollisninja, vihollisen ase sekä ajastus heittotähtien heittämiselle.
     /// </summary>
@@ -329,7 +353,6 @@ public class ht : PhysicsGame
         vihunAse.ProjectileCollision = HeittoTahtiTormasiPelaajaan;
         vihollinen.Add(vihunAse);
         vihunAse.IsVisible = false;
-
 
         Timer tahtienSylkyTimer = Timer.CreateAndStart(3, delegate { VihuHeita(vihunAse, vihollinen); });
 
@@ -362,6 +385,8 @@ public class ht : PhysicsGame
             heittoTahti.Image = heittoTahtiKuva;
         }
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa määritellään mitä tapahtuu kun pelaajan heittämä heittotähti osuu viholliseen
     /// </summary>
@@ -382,6 +407,8 @@ public class ht : PhysicsGame
         
 
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa määritellään mitä tapahtuu, kun vihollisen heittotähti osuu pelaajaan.
     /// </summary>
@@ -399,7 +426,7 @@ public class ht : PhysicsGame
                 elamaLaskuri.Value -= 1;
                 ClearAll();
                 MessageDisplay.Add("Hävisit pelin!");
-                mainMenuDelay = Timer.CreateAndStart(3, MainMenu);
+                Timer.CreateAndStart(3, MainMenu);
             }
             else
             {
@@ -414,6 +441,8 @@ public class ht : PhysicsGame
             heittotahti.Destroy();
         }
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa luodaan peliin kruunu
     /// </summary>
@@ -429,6 +458,8 @@ public class ht : PhysicsGame
         kruunu.Tag = "kruunu";
         Add(kruunu);
     }
+
+
     /// <summary>
     /// Alihojelma, jossa luodaan peliin tähti.
     /// </summary>
@@ -446,6 +477,8 @@ public class ht : PhysicsGame
         tahtienLkmKentassa++;
         PisteTilastot();
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa luodaan peliin este.
     /// </summary>
@@ -461,6 +494,8 @@ public class ht : PhysicsGame
         este.Tag = "este";
         Add(este);
     }
+
+
     /// <summary>
     /// Aliohjelma jossa luodaan kenttään taso, joita pitkin hypitään.
     /// </summary>
@@ -474,11 +509,16 @@ public class ht : PhysicsGame
         taso.Color = Color.Gray;
         Add(taso);
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa määritetään pelissä käytettävät näppäimet.
     /// </summary>
     private void LisaaNappaimet()
     {
+        double nopeus = 100;
+        double hyppynopeus = 600;
+
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
 
@@ -495,6 +535,8 @@ public class ht : PhysicsGame
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa määritetään pelaaja liikkumaan oikealle sekä aseen kulma oikealle.
     /// </summary>
@@ -505,6 +547,8 @@ public class ht : PhysicsGame
         ase.Angle = Angle.FromDegrees(0);
         hahmo.Walk(nopeus);
     }
+
+
     /// <summary>
     /// Aliohjelma, jossa määritetään pelaaja liikkumaan vasemmalle sekä aseen kulma vasemmalle.
     /// </summary>
@@ -515,6 +559,7 @@ public class ht : PhysicsGame
         ase.Angle = Angle.FromDegrees(180);
         hahmo.Walk(nopeus);
     }
+
 
     /// <summary>
     /// Aliohjelma, jossa määritellään pelaaja hyppäämään.
